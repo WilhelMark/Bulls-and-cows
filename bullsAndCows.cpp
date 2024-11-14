@@ -30,20 +30,27 @@ int main() {
     int bulls = 0; // Количество быков
     int cows = 0;  // Количество коров
 
-    // Подсчет быков
+    // Массив для отслеживания использованных цифр в загаданном числе
+    bool usedInSecret[4] = {false, false, false, false};
+    bool usedInGuess[4] = {false, false, false, false};
+
+    // Подсчет быков и отметка использованных цифр
     for (int i = 0; i < 4; ++i) {
         if (secretNumber[i] == guessedNumber[i]) {
             bulls++; // Увеличиваем счетчик быков
+            usedInSecret[i] = true; // Отмечаем, что эта цифра использована
+            usedInGuess[i] = true;  // Отмечаем, что эта цифра использована
         }
     }
 
     // Подсчет коров
     for (int i = 0; i < 4; ++i) {
-        if (secretNumber[i] != guessedNumber[i]) { // Только если это не бык
+        if (!usedInGuess[i]) { // Если эта цифра не была использована как бык
             for (int j = 0; j < 4; ++j) {
-                if (secretNumber[i] == guessedNumber[j] && secretNumber[j] != guessedNumber[j]) {
+                if (secretNumber[i] == guessedNumber[j] && !usedInSecret[j]) {
                     cows++; // Увеличиваем счетчик коров
-                    break; // Прерываем внутренний цикл, чтобы не считать одну корову несколько раз
+                    usedInSecret[j] = true; // Отмечаем, что эта цифра использована в загаданном числе
+                    break; // Прерываем внутренний цикл для предотвращения повторного учета одной и той же коровы
                 }
             }
         }
